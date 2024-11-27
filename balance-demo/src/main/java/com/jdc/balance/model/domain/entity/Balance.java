@@ -3,14 +3,30 @@ package com.jdc.balance.model.domain.entity;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+
+@Entity
 public class Balance implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	@Column(nullable=false)
 	private LocalDate date;
+	@Column(nullable=false)
 	private String category;
-	private User usr;
+	
+	@ManyToOne(optional=false, cascade= {CascadeType.PERSIST, CascadeType.MERGE})
+	private User user;
+	
 	private Type type;
 	
 	
@@ -52,13 +68,13 @@ public class Balance implements Serializable{
 
 
 	public User getUsr() {
-		return usr;
+		return user;
 	}
 
 
 
 	public void setUsr(User usr) {
-		this.usr = usr;
+		this.user = usr;
 	}
 
 

@@ -1,20 +1,29 @@
 package com.jdc.balance_demo.balance_demo;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.jdc.balance.model.domain.entity.User.Role;
+
 @Controller
 public class SecurityController {
 	
-	@GetMapping("signin")
-	public void LoadSignIn() {
+
+	@GetMapping("/")
+	public String index() {
 		
-	}
-	
-	@PostMapping("signin")
-	public String signin() {
-		return"redirect:/";
+		var auth= SecurityContextHolder.getContext().getAuthentication();
+		
+		if(null != auth && 
+				auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(Role.Admin.name()) 
+						|| a.getAuthority().equals(Role.Member.name()))) {
+			
+			return "redirect:/user/home";
+			
+		}
+		return"signin";
 	}
 	
 	@GetMapping("signup")
@@ -27,10 +36,6 @@ public class SecurityController {
 		return"redirect:/";
 	}
 	
-	@GetMapping("signout")
-	public String signOut() {
-		return"redirect:/signin";
-	}
 	
 	@PostMapping("user/changepass")
 	public String changePass() {
